@@ -1,0 +1,30 @@
+# --- Forks live in their own GitHub repos (see README); not vendored here ---
+/anki/
+/Anki-Android/
+/Anki-Android-Backend/
+
+# --- Runtime Anki base (contains a live collection) ---
+/mcat_base/
+
+# --- Python environments / caches ---
+**/.venv/
+**/__pycache__/
+*.pyc
+
+# --- Generated analysis artifacts (reproduce with `make eval / ai / bench / crash`) ---
+/data/sim/
+/data/sim_persona/
+/data/eval/
+/data/demo/
+/data/bench/
+/data/crash/
+/data/sync/
+/data/decks/
+/data/fitted_params.json
+/data/ai/cache.json
+/data/ai/ai_cards.anki2
+/data/ai/ai_cards.media/
+/data/ai/passing_cards.json
+
+# --- OS / editor ---
+.DS_Store

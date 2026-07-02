@@ -1,0 +1,102 @@
+{
+  "note": "Smallest-version proof of the MEMORY->PERFORMANCE bridge (the differentiated core). Each concept has a RECALL item (a direct question straight from the flashcard fact - tests memory) and a TRANSFER item (a novel application/passage-style question that uses the SAME fact one step further - tests performance/transfer). Both are 4-option multiple choice with an objective key, so any respondent (a human via the quiz, or the local LLM) can be graded automatically with no fabrication. The bridge is real iff transfer accuracy < recall accuracy AND recalling the fact does not guarantee transferring it (P(transfer correct | recall correct) < 1). All readiness confidence bands sit downstream of this.",
+  "answer_scale": "single letter A-D",
+  "concepts": [
+    {
+      "id": "enz_comp", "topic": "mcat::bb::enzymes", "section": "BB", "concept": "competitive inhibition",
+      "recall": {"q": "How does a competitive inhibitor affect an enzyme's apparent Km and Vmax?",
+        "choices": {"A": "Km increases, Vmax unchanged", "B": "Km unchanged, Vmax decreases", "C": "Km decreases, Vmax increases", "D": "Both Km and Vmax decrease"}, "answer": "A"},
+      "transfer": {"q": "A reversible drug binds an enzyme's active site. When researchers add a large excess of substrate, the maximum reaction velocity returns to its normal value. Which inhibition type is most consistent with this observation?",
+        "choices": {"A": "Noncompetitive", "B": "Competitive", "C": "Uncompetitive", "D": "Irreversible"}, "answer": "B",
+        "step": "must infer inhibition type from a described experiment, not restate the Km/Vmax rule"}
+    },
+    {
+      "id": "buffer_hh", "topic": "mcat::cp::acids_bases", "section": "CP", "concept": "buffer pKa",
+      "recall": {"q": "A buffer resists pH change most effectively when the pH is near what value?",
+        "choices": {"A": "7.0", "B": "0", "C": "its pKa", "D": "14"}, "answer": "C"},
+      "transfer": {"q": "You must prepare a buffer that holds pH near 7.2. Which weak acid should you choose?",
+        "choices": {"A": "pKa = 3.1", "B": "pKa = 4.7", "C": "pKa = 7.2", "D": "pKa = 10.3"}, "answer": "C",
+        "step": "apply 'buffer works near pKa' to select a reagent for a target pH"}
+    },
+    {
+      "id": "proj_indep", "topic": "mcat::cp::mechanics", "section": "CP", "concept": "independence of projectile motion",
+      "recall": {"q": "For a projectile with no air resistance, what is the horizontal acceleration?",
+        "choices": {"A": "g downward", "B": "Zero", "C": "g upward", "D": "Depends on speed"}, "answer": "B"},
+      "transfer": {"q": "From the same table height, one ball is dropped and another is thrown horizontally at the same instant. Which reaches the floor first?",
+        "choices": {"A": "The dropped ball", "B": "The thrown ball", "C": "They land at the same time", "D": "Cannot be determined"}, "answer": "C",
+        "step": "apply independence of horizontal and vertical motion to a scenario"}
+    },
+    {
+      "id": "thermo_spont", "topic": "mcat::cp::thermodynamics", "section": "CP", "concept": "temperature-dependent spontaneity",
+      "recall": {"q": "A reaction is spontaneous when the sign of delta-G is:",
+        "choices": {"A": "Positive", "B": "Zero", "C": "Negative", "D": "Undefined"}, "answer": "C"},
+      "transfer": {"q": "A reaction is endothermic (delta-H > 0) and increases entropy (delta-S > 0). Under what condition is it spontaneous?",
+        "choices": {"A": "Only at low temperature", "B": "Only at high temperature", "C": "At all temperatures", "D": "Never"}, "answer": "B",
+        "step": "reason about the T*dS term across temperature regimes, not just the dG sign rule"}
+    },
+    {
+      "id": "hardy_carrier", "topic": "mcat::bb::genetics", "section": "BB", "concept": "Hardy-Weinberg carriers",
+      "recall": {"q": "Under Hardy-Weinberg equilibrium, which expression gives the frequency of heterozygous carriers?",
+        "choices": {"A": "p^2", "B": "q^2", "C": "2pq", "D": "p + q"}, "answer": "C"},
+      "transfer": {"q": "In a population at Hardy-Weinberg equilibrium, 1 in 10,000 individuals has a recessive disease. Approximately what fraction are carriers?",
+        "choices": {"A": "About 1 in 50", "B": "About 1 in 100", "C": "About 1 in 10,000", "D": "About 1 in 5,000"}, "answer": "A",
+        "step": "q^2=1e-4 -> q=0.01 -> 2pq ~ 0.0198 ~ 1/50; back-calculate then compute"}
+    },
+    {
+      "id": "pfk_flux", "topic": "mcat::bb::metabolism", "section": "BB", "concept": "PFK-1 regulation",
+      "recall": {"q": "Which enzyme catalyzes the rate-limiting step of glycolysis?",
+        "choices": {"A": "Hexokinase", "B": "Phosphofructokinase-1", "C": "Pyruvate kinase", "D": "Aldolase"}, "answer": "B"},
+      "transfer": {"q": "A cell's ATP level rises sharply. What happens to glycolytic flux, and why?",
+        "choices": {"A": "Rises; ATP activates PFK-1", "B": "Falls; ATP allosterically inhibits PFK-1", "C": "Unchanged; PFK-1 is not regulated", "D": "Falls; ATP is the substrate that ran out"}, "answer": "B",
+        "step": "connect energy charge to allosteric control of the committed step"}
+    },
+    {
+      "id": "sn1_sn2", "topic": "mcat::cp::organic_chemistry", "section": "CP", "concept": "SN1 vs SN2",
+      "recall": {"q": "SN2 reactions are favored by which type of substrate?",
+        "choices": {"A": "Tertiary", "B": "Primary", "C": "Quaternary", "D": "Aromatic"}, "answer": "B"},
+      "transfer": {"q": "A tertiary alkyl halide reacts in a polar protic solvent with a weak nucleophile. Which mechanism dominates and what is its rate law?",
+        "choices": {"A": "SN2, rate = k[substrate][nucleophile]", "B": "SN1, rate = k[substrate]", "C": "SN2, rate = k[substrate]", "D": "SN1, rate = k[substrate][nucleophile]"}, "answer": "B",
+        "step": "integrate substrate, solvent, and nucleophile cues, then state the order"}
+    },
+    {
+      "id": "neg_reinf", "topic": "mcat::ps::learning_memory", "section": "PS", "concept": "negative reinforcement",
+      "recall": {"q": "Negative reinforcement does what to a behavior?",
+        "choices": {"A": "Decreases it by adding an aversive stimulus", "B": "Increases it by removing an aversive stimulus", "C": "Decreases it by removing a pleasant stimulus", "D": "Has no effect on behavior"}, "answer": "B"},
+      "transfer": {"q": "A student takes aspirin to end a headache; over weeks she takes it sooner and sooner at the first sign of pain. Which process best explains the increase in her pill-taking?",
+        "choices": {"A": "Positive punishment", "B": "Negative reinforcement", "C": "Classical extinction", "D": "Positive reinforcement"}, "answer": "B",
+        "step": "classify a real scenario rather than restate the definition"}
+    },
+    {
+      "id": "sdt_criterion", "topic": "mcat::ps::sensation_perception", "section": "PS", "concept": "signal detection criterion",
+      "recall": {"q": "In signal detection theory, d' (d-prime) measures:",
+        "choices": {"A": "Response bias", "B": "Sensitivity to distinguish signal from noise", "C": "Reaction time", "D": "The false alarm rate alone"}, "answer": "B"},
+      "transfer": {"q": "A radiologist becomes more willing to label ambiguous scans as 'positive.' How do hits and false alarms change, and which parameter shifted?",
+        "choices": {"A": "Both fall; sensitivity (d') shifted", "B": "Both rise; the response criterion shifted", "C": "Hits rise, false alarms fall; d' shifted", "D": "No change; only reaction time shifted"}, "answer": "B",
+        "step": "separate a criterion shift from a sensitivity change"}
+    },
+    {
+      "id": "tonicity", "topic": "mcat::bb::cell_biology", "section": "BB", "concept": "tonicity",
+      "recall": {"q": "A cell placed in a hypotonic solution will:",
+        "choices": {"A": "Shrink", "B": "Swell (and may lyse)", "C": "Stay the same", "D": "Gain solute"}, "answer": "B"},
+      "transfer": {"q": "A red blood cell placed in an unknown solution swells and bursts. What can you conclude about the solution?",
+        "choices": {"A": "It is hypertonic", "B": "It is isotonic", "C": "It is hypotonic", "D": "It has no water"}, "answer": "C",
+        "step": "reason from observed cell behavior back to tonicity"}
+    },
+    {
+      "id": "parallel_bulb", "topic": "mcat::cp::electrostatics_circuits", "section": "CP", "concept": "parallel circuit voltage",
+      "recall": {"q": "Resistors connected in parallel share the same:",
+        "choices": {"A": "Current", "B": "Voltage", "C": "Charge", "D": "Power"}, "answer": "B"},
+      "transfer": {"q": "Two identical bulbs are wired in parallel across a battery. One bulb burns out (its filament opens). What happens to the brightness of the other bulb?",
+        "choices": {"A": "It gets dimmer", "B": "It stays the same", "C": "It gets brighter", "D": "It also goes out"}, "answer": "B",
+        "step": "apply voltage-constancy across parallel branches to a failure scenario"}
+    },
+    {
+      "id": "lechatelier", "topic": "mcat::cp::kinetics", "section": "CP", "concept": "Le Chatelier combined stress",
+      "recall": {"q": "Raising the temperature of an exothermic reaction at equilibrium shifts it toward:",
+        "choices": {"A": "Products", "B": "Reactants", "C": "No shift", "D": "Solid phase"}, "answer": "B"},
+      "transfer": {"q": "An exothermic gas-phase reaction has fewer moles of gas on the product side. You raise the temperature AND lower the pressure. What happens to product yield?",
+        "choices": {"A": "Increases", "B": "Decreases", "C": "Unchanged", "D": "First increases then decreases"}, "answer": "B",
+        "step": "combine two simultaneous stresses (both push toward reactants)"}
+    }
+  ]
+}

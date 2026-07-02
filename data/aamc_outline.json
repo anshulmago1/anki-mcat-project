@@ -1,0 +1,74 @@
+{
+  "exam": "MCAT",
+  "scale": { "section_min": 118, "section_max": 132, "total_min": 472, "total_max": 528, "total_midpoint": 500 },
+  "source": "AAMC, 'What's on the MCAT Exam?' content outline (foundational concepts and content categories). Section weights are by question proportion (BB 59, CP 59, PS 59, CARS 53; total 230). Within-section topic weights are a representative emphasis distribution and sum to 1.0 per section.",
+  "tag_scheme": {
+    "convention": "mcat::<section>::<topic_slug>",
+    "note": "MCAT content categories are encoded as Anki note tags. The mastery query groups cards by the tag prefix 'mcat::<section>'. A card counts toward a topic if it carries that topic's tag.",
+    "examples": ["mcat::bb::amino_acids_proteins", "mcat::cp::thermodynamics", "mcat::ps::learning_memory", "mcat::cars::reasoning_beyond_text"]
+  },
+  "sections": {
+    "BB": {
+      "name": "Biological and Biochemical Foundations of Living Systems",
+      "short_name": "Biological & Biochemical",
+      "question_count": 59,
+      "section_weight": 0.2565,
+      "topics": [
+        { "id": "mcat::bb::amino_acids_proteins", "label": "Amino acids, peptides, proteins", "foundational_concept": "1A", "weight": 0.16 },
+        { "id": "mcat::bb::enzymes", "label": "Enzyme structure, function, kinetics", "foundational_concept": "1A", "weight": 0.14 },
+        { "id": "mcat::bb::nucleic_acids", "label": "Nucleic acids and the central dogma", "foundational_concept": "1B", "weight": 0.12 },
+        { "id": "mcat::bb::metabolism", "label": "Bioenergetics and metabolism", "foundational_concept": "1D", "weight": 0.14 },
+        { "id": "mcat::bb::cell_biology", "label": "Cell structure and function", "foundational_concept": "2A", "weight": 0.12 },
+        { "id": "mcat::bb::microbiology", "label": "Microbiology and viruses", "foundational_concept": "2B", "weight": 0.06 },
+        { "id": "mcat::bb::genetics", "label": "Genetics and heredity", "foundational_concept": "2C", "weight": 0.10 },
+        { "id": "mcat::bb::organ_systems", "label": "Organ systems and physiology", "foundational_concept": "3B", "weight": 0.16 }
+      ]
+    },
+    "CP": {
+      "name": "Chemical and Physical Foundations of Biological Systems",
+      "short_name": "Chemical & Physical",
+      "question_count": 59,
+      "section_weight": 0.2565,
+      "topics": [
+        { "id": "mcat::cp::atomic_structure", "label": "Atomic structure and periodicity", "foundational_concept": "5A", "weight": 0.08 },
+        { "id": "mcat::cp::bonding", "label": "Bonding and molecular structure", "foundational_concept": "5A", "weight": 0.08 },
+        { "id": "mcat::cp::thermodynamics", "label": "Thermodynamics and thermochemistry", "foundational_concept": "4B", "weight": 0.12 },
+        { "id": "mcat::cp::kinetics", "label": "Reaction kinetics and equilibrium", "foundational_concept": "5E", "weight": 0.12 },
+        { "id": "mcat::cp::acids_bases", "label": "Acids, bases, and titrations", "foundational_concept": "5B", "weight": 0.12 },
+        { "id": "mcat::cp::electrochemistry", "label": "Electrochemistry and solutions", "foundational_concept": "5B", "weight": 0.08 },
+        { "id": "mcat::cp::mechanics", "label": "Translational/rotational mechanics, energy", "foundational_concept": "4A", "weight": 0.12 },
+        { "id": "mcat::cp::electrostatics_circuits", "label": "Electrostatics and circuits", "foundational_concept": "4C", "weight": 0.10 },
+        { "id": "mcat::cp::optics_sound", "label": "Light, optics, and sound", "foundational_concept": "4D", "weight": 0.08 },
+        { "id": "mcat::cp::organic_chemistry", "label": "Organic chemistry and spectroscopy", "foundational_concept": "5D", "weight": 0.10 }
+      ]
+    },
+    "PS": {
+      "name": "Psychological, Social, and Biological Foundations of Behavior",
+      "short_name": "Psych / Social",
+      "question_count": 59,
+      "section_weight": 0.2565,
+      "topics": [
+        { "id": "mcat::ps::sensation_perception", "label": "Sensation and perception", "foundational_concept": "6A", "weight": 0.12 },
+        { "id": "mcat::ps::learning_memory", "label": "Learning and memory", "foundational_concept": "7A", "weight": 0.14 },
+        { "id": "mcat::ps::cognition_language", "label": "Cognition, consciousness, language", "foundational_concept": "6B", "weight": 0.12 },
+        { "id": "mcat::ps::motivation_emotion", "label": "Motivation, emotion, stress", "foundational_concept": "6C", "weight": 0.12 },
+        { "id": "mcat::ps::identity_personality", "label": "Identity and personality", "foundational_concept": "7C", "weight": 0.12 },
+        { "id": "mcat::ps::social_processes", "label": "Social processes and behavior", "foundational_concept": "7B", "weight": 0.14 },
+        { "id": "mcat::ps::social_structure", "label": "Social structure and institutions", "foundational_concept": "9B", "weight": 0.12 },
+        { "id": "mcat::ps::demographics_inequality", "label": "Demographics and social inequality", "foundational_concept": "10A", "weight": 0.12 }
+      ]
+    },
+    "CARS": {
+      "name": "Critical Analysis and Reasoning Skills",
+      "short_name": "Critical Analysis & Reasoning",
+      "question_count": 53,
+      "section_weight": 0.2304,
+      "note": "CARS tests reasoning skills over humanities/social-science passages, not memorizable content. Coverage is over the three AAMC reasoning-skill categories; performance must use a reading-comprehension ability separate from the science sections.",
+      "topics": [
+        { "id": "mcat::cars::foundations_comprehension", "label": "Foundations of comprehension", "foundational_concept": "CARS-1", "weight": 0.30 },
+        { "id": "mcat::cars::reasoning_within_text", "label": "Reasoning within the text", "foundational_concept": "CARS-2", "weight": 0.30 },
+        { "id": "mcat::cars::reasoning_beyond_text", "label": "Reasoning beyond the text", "foundational_concept": "CARS-3", "weight": 0.40 }
+      ]
+    }
+  }
+}

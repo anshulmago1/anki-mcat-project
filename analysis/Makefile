@@ -4,7 +4,7 @@ PY ?= .venv/bin/python
 # The demo/dashboard talk to the live engine, so they use Anki's built Python.
 ANKI_PY ?= ../anki/out/pyenv/bin/python
 
-.PHONY: eval clean venv simulate demo dashboard outline ai bench crash bridge bridge-llm
+.PHONY: eval clean venv simulate demo dashboard outline ai ai-targeted bench crash bridge bridge-llm
 
 eval: simulate
 	$(PY) leakage_check.py
@@ -15,6 +15,7 @@ eval: simulate
 	$(PY) paraphrase_real.py
 	$(PY) ablation.py
 	$(PY) graph_eval.py
+	$(PY) ai/targeted_eval.py
 	$(PY) report.py
 	@echo "=== eval complete: see analysis/RESULTS.md and data/eval/*.json ==="
 
@@ -41,6 +42,14 @@ ai:
 	$(ANKI_PY) ai/ai_export.py
 	$(PY) report.py
 	@echo "=== ai complete: see data/eval/ai_eval.json and data/ai/MCAT_AI_Generated.apkg ==="
+
+# Graph-guided targeted card generation (AI x knowledge graph): the graph picks
+# your top learning-ready weak topics, the local LLM generates grounded cards for
+# them, the checker keeps only correct ones, exported to an importable deck.
+# Needs Ollama running and the target collection CLOSED (default: mcat_base).
+ai-targeted:
+	$(ANKI_PY) ai/targeted_gen.py
+	@echo "=== targeted complete: data/ai/MCAT_Targeted.apkg + data/ai/targeted_report.json ==="
 
 # One-command benchmark on the shared 50,000-card deck (Speedrun 7h + sec.10).
 bench:

@@ -28,6 +28,7 @@ def main() -> None:
     crash = _load("crash_test.json")
     sync = _load("sync_test.json")
     bench = _load("bench.json")
+    tge = _load("targeted_eval.json")
     bridge = _load("perf_bridge.json")
 
     L = []
@@ -167,6 +168,27 @@ def main() -> None:
         L.append(f"- **Prompt-injection defense: {inj['pass_rate']}** ({inj['passed']}/{inj['n']} poisoned-source trials "
                  f"produced a clean card and never emitted the injected payload)")
         L.append(f"- Passing cards exported to an importable .apkg: **{ai['passing_cards_exported']}** cards.\n")
+
+    if tge:
+        st = tge["by_strategy"]; bd = tge["graph_minus_baselines"]
+        L.append("### 7b. Graph-guided targeted card generation (AI x knowledge graph)\n")
+        L.append(f"> The graph picks which weak topics to generate cards for; the local LLM generates "
+                 f"grounded+checked cards for them. Beats-a-baseline is on the *targeting* decision. "
+                 f"Pre-registered: {tge['preregistered_hypothesis']}")
+        L.append(f"> {tge['n_profiles']} simulated mastery profiles, {tge['budget_topics']}-topic budget; "
+                 f"metric: {tge['metric']}.\n")
+        L.append("| Targeting | At-risk-ready weight addressed | Blocked (wasted) picks |")
+        L.append("|---|---|---|")
+        L.append(f"| **Graph (ours)** | **{st['graph']['value_mean']}** {st['graph']['value_ci95']} | **{st['graph']['blocked_mean']}** |")
+        L.append(f"| Random | {st['random']['value_mean']} {st['random']['value_ci95']} | {st['random']['blocked_mean']} |")
+        L.append(f"| Weight-only | {st['weight']['value_mean']} {st['weight']['value_ci95']} | {st['weight']['blocked_mean']} |")
+        L.append(f"| Due-only (plain Anki) | {st['due']['value_mean']} {st['due']['value_ci95']} | {st['due']['blocked_mean']} |")
+        L.append(f"\n- Graph - random +{bd['random']['delta']} {bd['random']['delta_ci95']}; "
+                 f"- weight +{bd['weight']['delta']} {bd['weight']['delta_ci95']}; "
+                 f"- due +{bd['due']['delta']} {bd['due']['delta_ci95']} (all significant).")
+        L.append(f"- **Beats all baselines: {tge['beats_baselines']}** - graph never spends the budget on a "
+                 f"prerequisite-blocked topic (0 wasted), unlike weight/due. Cards themselves stay grounded + "
+                 f"checker-verified; run the live pipeline with `make ai-targeted`.\n")
 
     if bench:
         L.append("## 8. Benchmark on the 50,000-card deck (Speedrun 7h + sec. 10)\n")

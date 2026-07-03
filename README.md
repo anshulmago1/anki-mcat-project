@@ -23,11 +23,12 @@ The **one shared engine change** is written once in Rust (`rslib`) and ships to 
 Every displayed number is an `EvidencedValue` — value + range + confidence + the reviews/coverage/calibration behind it. Nothing shows without its evidence.
 
 - **Memory (M):** FSRS-6 retrievability, aggregated per AAMC topic from your real reviews (models the forgetting curve).
-- **Performance (P):** 3PL IRT — the probability you answer a *new* exam-style question right (transfer, not recall). The M−P "paraphrase gap" is a first-class output.
+- **Performance (P):** 3PL IRT — the probability you answer a *new* exam-style question right (transfer, not recall). Computed live in the app (grid-MLE ability θ + Fisher-information SE, a direct port of `analysis/irt_fit.py`), not a `correct/total` proxy. The M−P "paraphrase gap" is a first-class output (real recall→transfer items in `analysis/perf_bridge.py`).
 - **Readiness (E):** coverage-gated map to the 118–132 section scale, summed to a 472–528 total with a range and AAMC-style confidence band.
 - **Give-up rule:** withholds a score until a section has ≥200 graded reviews, ≥50% coverage, and a tight enough IRT SE.
 - **Next-best-action + knowledge graph:** a ranked "do this next" list and an interactive prerequisite graph (nodes colored by mastery) — both proven to beat keyword/vector baselines.
-- **Learning-science multipliers** (spacing, interleaving, testing), each gated and tied to a published effect size (Cepeda 2008, Bjork/Rohrer, Dunlosky 2013).
+- **Graph-guided AI card generation:** the graph selects your highest-value, prerequisite-ready weak topics; the local LLM generates source-grounded, checker-verified cards for exactly those topics (`make ai-targeted`). The targeting decision beats random/weight/due baselines and never wastes budget on a prerequisite-blocked topic.
+- **Learning-science multipliers** (spacing, interleaving, testing) tied to published effect sizes (Cepeda 2008, Bjork/Rohrer, Dunlosky 2013). Honesty: they are **neutral (1.0) in the live score** until session-level study quality is measured — no unearned boost — and are exercised in the interleaving ablation instead.
 
 See [PRD.md](PRD.md) for the full product spec and [docs/models/](docs/models/) for one-page descriptions of each model.
 
@@ -75,8 +76,11 @@ export PATH="$HOME/.cargo/bin:$PATH"
 ### Desktop installer (.dmg)
 ```bash
 cd anki && RELEASE=1 ./ninja installer
-# -> out/installer/dist/anki-*-mac-apple.dmg  (drag Anki.app to /Applications)
+# -> out/installer/dist/anki-*-mac-apple.dmg
 ```
+Open the `.dmg` and drag **Anki.app** into **/Applications** — the Dock/Launchpad icon
+then launches the fork (it replaces the stock Anki; your card data is untouched). The
+build is ad-hoc signed, so on a clean Mac use right-click → Open once to pass Gatekeeper.
 
 ### Android (emulator or device)
 ```bash
@@ -95,6 +99,7 @@ cd analysis
 make venv          # one-time: numpy venv
 make eval          # calibration, IRT, ablation, leakage, real-paraphrase, graph-vs-baselines -> RESULTS.md
 make ai            # Ollama RAG card generation + gold-set checker + injection defense (needs `ollama serve`)
+make ai-targeted   # graph-guided targeted generation: graph picks weak topics -> grounded+checked cards -> MCAT_Targeted.apkg
 make bench         # 50k-card speed benchmark vs section-10 targets (p50/p95/worst)
 make crash         # 20x mid-review SIGKILL: zero corruption + AI-off offline score
 python sync_test.py  # two-device offline merge + conflict rule (7b)

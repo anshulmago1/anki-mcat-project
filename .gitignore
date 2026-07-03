@@ -25,6 +25,9 @@
 /data/ai/ai_cards.anki2
 /data/ai/ai_cards.media/
 /data/ai/passing_cards.json
+/data/ai/targeted_cards.anki2
+/data/ai/targeted_cards.media/
+/data/ai/targeted_report.json
 
 # --- OS / editor ---
 .DS_Store

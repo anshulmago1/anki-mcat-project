@@ -111,6 +111,21 @@ We do not have real student study-history + full-length-score longitudinal data,
 - **Prompt-injection defense: 1.0** (6/6 poisoned-source trials produced a clean card and never emitted the injected payload)
 - Passing cards exported to an importable .apkg: **30** cards.
 
+### 7b. Graph-guided targeted card generation (AI x knowledge graph)
+
+> The graph picks which weak topics to generate cards for; the local LLM generates grounded+checked cards for them. Beats-a-baseline is on the *targeting* decision. Pre-registered: graph-guided targeting > random/weight/due on at-risk-ready exam weight addressed per budget AND never targets a blocked topic
+> 400 simulated mastery profiles, 5-topic budget; metric: sum over chosen topics of weight*(1-mastery), counted only when learning_ready.
+
+| Targeting | At-risk-ready weight addressed | Blocked (wasted) picks |
+|---|---|---|
+| **Graph (ours)** | **0.62** [0.61, 0.63] | **0.0** |
+| Random | 0.232 [0.22, 0.24] | 2.37 |
+| Weight-only | 0.33 [0.32, 0.34] | 2.322 |
+| Due-only (plain Anki) | 0.322 [0.31, 0.34] | 2.388 |
+
+- Graph - random +0.388 [0.37, 0.4]; - weight +0.289 [0.28, 0.3]; - due +0.298 [0.29, 0.31] (all significant).
+- **Beats all baselines: True** - graph never spends the budget on a prerequisite-blocked topic (0 wasted), unlike weight/due. Cards themselves stay grounded + checker-verified; run the live pipeline with `make ai-targeted`.
+
 ## 8. Benchmark on the 50,000-card deck (Speedrun 7h + sec. 10)
 
 > `make bench` on 50000 cards. p95 targets from section 10.

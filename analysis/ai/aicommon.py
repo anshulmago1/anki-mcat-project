@@ -15,7 +15,9 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-import numpy as np
+# numpy is imported lazily inside TfidfRetriever so this module can also be used
+# under Anki's Python (which lacks numpy) for the non-TF-IDF helpers
+# (ollama_generate, extract_json, load_sources/gold, toks).
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "data"
@@ -92,6 +94,7 @@ class TfidfRetriever:
     """Tiny TF-IDF cosine retriever over the source passages (numpy only)."""
 
     def __init__(self, passages: list[dict]):
+        import numpy as np
         self.passages = passages
         self.docs = [toks(p["text"]) for p in passages]
         vocab = sorted(set().union(*self.docs)) if self.docs else []
@@ -104,7 +107,8 @@ class TfidfRetriever:
         self.idf = np.log((1 + n) / (1 + df)) + 1
         self.mat = np.array([self._vec(d) for d in self.docs]) if passages else np.zeros((0, 0))
 
-    def _vec(self, tokens: list[str]) -> np.ndarray:
+    def _vec(self, tokens: list[str]) -> "np.ndarray":
+        import numpy as np
         v = np.zeros(len(self.idx))
         for w in tokens:
             if w in self.idx:
@@ -117,6 +121,7 @@ class TfidfRetriever:
         return v
 
     def top_k(self, query: str, k: int = 3) -> list[dict]:
+        import numpy as np
         if len(self.passages) == 0:
             return []
         q = self._vec(toks(query))

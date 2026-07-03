@@ -92,14 +92,23 @@ def reviewed_card_ids(col) -> set[int]:
     return set(col.db.list("select distinct cid from revlog"))
 
 
-def review_specific(col, card_ids):
-    """Answer specific cards by id (they are new -> answerable), creating revlog rows."""
+def review_from_deck(col, deck_name: str, n: int) -> list[int]:
+    """Review n cards from a specific deck via the normal scheduler queue (reliable
+    and deterministic). Returns the reviewed card ids. Two devices use two disjoint
+    subdecks so their offline reviews never overlap."""
+    did = col.decks.id(deck_name)
+    col.decks.set_current(did)
+    conf = col.decks.config_dict_for_deck_id(did)
+    conf["new"]["perDay"] = 1000
+    conf["rev"]["perDay"] = 1000
+    col.decks.update_config(conf)
     done = []
-    for cid in card_ids:
-        card = col.get_card(cid)
-        card.start_timer()  # getCard normally does this; we answer by id here
-        col.sched.answerCard(card, 3)
-        done.append(cid)
+    for _ in range(n):
+        c = col.sched.getCard()
+        if c is None:
+            break
+        col.sched.answerCard(c, 3)
+        done.append(c.id)
     return done
 
 
@@ -115,14 +124,18 @@ def run() -> dict:
         outline = load_outline()
         topics = [t["id"] for s in outline["sections"].values() for t in s["topics"]]
 
-        # --- device A: base deck, upload ---
+        # --- device A: base deck (two disjoint subdecks), upload ---
         colA = new_col(SYNC / "deviceA.anki2")
-        did = colA.decks.id("MCAT::Sync")
-        for i in range(60):
-            n = colA.newNote(); n["Front"] = f"q{i}"; n["Back"] = "a"
+        did_a = colA.decks.id("MCAT::Sync::DeviceA")
+        did_b = colA.decks.id("MCAT::Sync::DeviceB")
+        for i in range(30):
+            n = colA.newNote(); n["Front"] = f"qA{i}"; n["Back"] = "a"
             n.tags = [topics[i % len(topics)]]
-            colA.add_note(n, did)
-        all_cids = sorted(colA.find_cards("deck:MCAT::Sync"))
+            colA.add_note(n, did_a)
+        for i in range(30):
+            n = colA.newNote(); n["Front"] = f"qB{i}"; n["Back"] = "a"
+            n.tags = [topics[i % len(topics)]]
+            colA.add_note(n, did_b)
         authA = colA.sync_login(USER, PW, endpoint)
         result["A_first_sync"] = do_sync(colA, authA)
 
@@ -135,11 +148,11 @@ def run() -> dict:
 
         base_rev = revlog_count(colA)
 
-        # --- OFFLINE: disjoint reviews on each device ---
-        a_targets = all_cids[0:10]
-        b_targets = all_cids[10:20]
-        a_done = review_specific(colA, a_targets)
-        b_done = review_specific(colB, b_targets)
+        # --- OFFLINE: disjoint reviews on each device (A studies DeviceA subdeck,
+        #     B studies DeviceB subdeck -> different cards, no overlap) ---
+        a_done = review_from_deck(colA, "MCAT::Sync::DeviceA", 10)
+        b_done = review_from_deck(colB, "MCAT::Sync::DeviceB", 10)
+        expected = set(a_done) | set(b_done)
 
         # --- reconnect + sync both ways ---
         do_sync(colA, authA)               # push A's 10
@@ -148,7 +161,6 @@ def run() -> dict:
 
         a_rev, b_rev = revlog_count(colA), revlog_count(colB)
         a_ids, b_ids = reviewed_card_ids(colA), reviewed_card_ids(colB)
-        expected = set(a_targets) | set(b_targets)
         # unique revlog ids == row count -> nothing double-counted
         a_unique = colA.db.scalar("select count(distinct id) from revlog") or 0
         b_unique = colB.db.scalar("select count(distinct id) from revlog") or 0
@@ -167,7 +179,10 @@ def run() -> dict:
                          and merge["gained_20"])
 
         # --- CONFLICT: both edit the same card's note offline; later mod wins ---
-        conflict_cid = all_cids[30]
+        # pick a card both sides have but neither reviewed (avoid the studied sets)
+        studied = set(a_done) | set(b_done)
+        pool = [c for c in colA.find_cards("deck:MCAT::Sync::*") if c not in studied]
+        conflict_cid = pool[0]
         nidA = colA.get_card(conflict_cid).nid
         nidB = colB.get_card(conflict_cid).nid
         nB = colB.get_note(nidB); nB["Front"] = "EDIT_B"; colB.update_note(nB)

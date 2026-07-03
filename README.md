@@ -120,9 +120,69 @@ Both apps share one collection via Anki's own sync protocol (self-hosted server 
 
 ---
 
+## Spec coverage & evidence
+
+### Rules you cannot break (Speedrun sec. 2)
+
+| Rule | Status | Evidence |
+|---|---|---|
+| Real change inside Anki's **Rust** code (not just Python screens) | ✅ | 4 RPCs in `anki/rslib/src/stats/` — [docs/RUST_CHANGE.md](docs/RUST_CHANGE.md), [rust_tests.txt](docs/verification/rust_tests.txt) (15 pass) |
+| **Two apps, one engine**, reviews/progress sync | ✅ | desktop + AnkiDroid run the forked `rslib`; [docs/SYNC.md](docs/SYNC.md), [sync_test.txt](docs/verification/sync_test.txt) |
+| **Three separate scores** (memory / performance / readiness), each a range | ✅ | `ReadinessCard.svelte` + `compute_readiness`; [RESULTS.md §3](analysis/RESULTS.md) |
+| Test models on **held-out** data, re-runnable | ✅ | temporal splits; `make eval`; [VERIFICATION.md](docs/VERIFICATION.md) |
+| One study feature: **write expectation, ablate on/off** | ✅ | interleaving ablation V1/V2/V3; [RESULTS.md §5](analysis/RESULTS.md) |
+| Every AI output from a **named source, checked, beats a baseline** | ✅ | RAG + gold-set checker, 0.75 vs 0.0; [make_ai.txt](docs/verification/make_ai.txt), [RESULTS.md §7](analysis/RESULTS.md) |
+| App **refuses a score** without enough data | ✅ | give-up rule (≥200 reviews, ≥50% coverage, IRT SE); [RESULTS.md §3](analysis/RESULTS.md) |
+| Ship a **desktop installer + phone build**, both run with **AI off** | ✅ | [deployment.md](docs/verification/deployment.md); AI-off score in [crash_test.txt](docs/verification/crash_test.txt) |
+| **AGPL-3.0-or-later** + credit to Anki | ✅ | LICENSE preserved in all forks; credit at top of this README |
+
+### Concrete challenges (Speedrun sec. 7)
+
+| # | Challenge | Status | Evidence |
+|---|---|---|---|
+| 7a | Rust change + 3 Rust tests + 1 Python test + undo-safe | ✅ | [docs/RUST_CHANGE.md](docs/RUST_CHANGE.md); [rust_tests.txt](docs/verification/rust_tests.txt), [python_tests.txt](docs/verification/python_tests.txt) |
+| 7b | Sync: offline both sides merge, conflict rule | ✅ | 20/20 merged, no double-count, LWW — [sync_test.txt](docs/verification/sync_test.txt), [docs/SYNC.md](docs/SYNC.md) |
+| 7c | Coverage map; abstain if under line | ✅ | AAMC outline coverage % + abstain; [data/aamc_outline.json](data/aamc_outline.json), [RESULTS.md §3](analysis/RESULTS.md) |
+| 7d | Paraphrase test (recall vs reworded) | ✅ | real recall→transfer items, gap measured — [RESULTS.md §2b](analysis/RESULTS.md), `analysis/perf_bridge.py` |
+| 7e | Leakage check | ✅ | TF-IDF detector, self-tested — [RESULTS.md §4](analysis/RESULTS.md) |
+| 7f | AI card check: 50-item gold set, correct/wrong/poor, cutoff | ✅ | [make_ai.txt](docs/verification/make_ai.txt); `data/ai/gold_set.json` |
+| 7g | Crash (20× kill, zero corruption) + offline | ✅ | 0/20 corrupted — [crash_test.txt](docs/verification/crash_test.txt) |
+| 7h | One-command benchmark on 50k deck | ✅ | `make bench` — [make_bench.txt](docs/verification/make_bench.txt) (honest p95 note in [VERIFICATION.md](docs/VERIFICATION.md)) |
+| sec.13 | Bonus: knowledge graph beats keyword + vector | ✅ | +14.3 / +18.5 pts — [RESULTS.md §6](analysis/RESULTS.md) |
+
+### Score model (Speedrun sec. 9)
+
+| Step | Status | Evidence |
+|---|---|---|
+| 1 — memory calibrated (Brier/log-loss on held-out) | ✅ | ECE 0.008, beats baseline — [RESULTS.md §1](analysis/RESULTS.md), [docs/models/memory.md](docs/models/memory.md) |
+| 2 — performance on held-out exam-style questions | ✅ | 3PL IRT, AUC 0.74 beats keyword/vector — [RESULTS.md §2](analysis/RESULTS.md), [docs/models/performance.md](docs/models/performance.md) |
+| 3 — score mapping with a range, method written down | ✅ | logit map, documented, honest calibration caveat — [docs/models/readiness.md](docs/models/readiness.md) |
+| 4 — validate vs real students (bonus) | ⛔ honest gap | no longitudinal study+FL data in a week; labeled not-yet-field-calibrated (sec. 9 prefers this over a fabricated number) |
+
+### What to hand in (Speedrun sec. 12)
+
+- **Public AGPL fork, credit to Anki, exam stated up front, build instructions (both apps), architecture, Rust-change note, files touched** — this README + [docs/RUST_CHANGE.md](docs/RUST_CHANGE.md) + [ARCHITECTURE.md](ARCHITECTURE.md).
+- **Model descriptions (one page each)** — [docs/models/memory.md](docs/models/memory.md), [performance.md](docs/models/performance.md), [readiness.md](docs/models/readiness.md).
+- **Brainlift** — [Brainlift Week 2.pdf](Brainlift%20Week%202.pdf).
+- **Demo video (3–5 min)** — shot list in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md); installer-recording runbook in [deployment.md](docs/verification/deployment.md). *(The video itself is the one artifact recorded by hand.)*
+
+### How it maps to the grade (Speedrun sec. 11)
+
+| Area | Weight | Where |
+|---|---|---|
+| Rust change & fit with Anki | 20% | [docs/RUST_CHANGE.md](docs/RUST_CHANGE.md), `anki/rslib/src/stats/` |
+| Score accuracy & honest uncertainty | 20% | [RESULTS.md §1–3](analysis/RESULTS.md), [docs/models/](docs/models/) |
+| Study feature (learning science) | 15% | ablation — [RESULTS.md §5](analysis/RESULTS.md) |
+| AI checking & safety | 15% | [RESULTS.md §7/7b](analysis/RESULTS.md), injection defense |
+| Fair, re-runnable tests | 12% | [docs/VERIFICATION.md](docs/VERIFICATION.md) |
+| Two apps / one engine + sync | 10% | [docs/SYNC.md](docs/SYNC.md), [sync_test.txt](docs/verification/sync_test.txt) |
+| Useful product & clean UX | 8% | readiness card + interactive knowledge graph (both apps) |
+
+---
+
 ## Honesty
 
-We do not have real student study-history + full-length-score longitudinal data, so we grade the **steps of the bridge** (calibrated memory, held-out performance, documented score mapping) and label the readiness coefficients **not yet field-calibrated**. Results and limitations: [analysis/RESULTS.md](analysis/RESULTS.md).
+We do not have real student study-history + full-length-score longitudinal data, so we grade the **steps of the bridge** (calibrated memory, held-out performance, documented score mapping) and label the readiness coefficients **not yet field-calibrated**. Results and limitations: [analysis/RESULTS.md](analysis/RESULTS.md). Additional honest positions: the live learning-science multipliers are neutral (no unearned boost); two full-collection benchmark scans are marginally over the 500 ms refresh p95 on a loaded machine (reported as measured, not gamed); the performance/paraphrase outcomes on real items are model-projected where noted.
 
 ---
 

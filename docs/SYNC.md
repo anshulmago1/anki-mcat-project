@@ -70,3 +70,21 @@ review history is preserved regardless.
    edit wins (documented LWW), while both cards' review rows survive.
 
 See `analysis/RESULTS.md` for the recorded run.
+
+### Live run on the real apps (2026-07-03)
+
+Beyond the harness, the full loop was verified on the **actual apps** — the desktop
+fork engine and the **AnkiDroid fork on an emulator**, both pointed at one
+self-hosted `syncserver`:
+
+- desktop → server → phone: after resolving the one-time full-sync prompt with
+  **Download**, the phone's `collection.anki2` matched the desktop **byte-for-byte on
+  schema/mod/card-count** (`scm=1783112626217`, `mod=1783113045335`, `cards=2888`).
+- phone → server → desktop: a card graded **"Good"** on the phone propagated to the
+  desktop on the next sync — desktop `revlog` went **16 → 17** and the exact review
+  row (`cid=1554657681232, ease=3`) appeared on the desktop.
+
+Full transcript and a phone screenshot: [../docs/verification/live_sync.txt](verification/live_sync.txt),
+[live_sync_phone.png](verification/live_sync_phone.png). This also directly reproduced
+the full-sync fallback dialog described above (and confirmed that, once both sides share
+a base, syncs are incremental and lossless).

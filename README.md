@@ -148,7 +148,7 @@ Both apps share one collection via Anki's own sync protocol (self-hosted server 
 | 7f | AI card check: 50-item gold set, correct/wrong/poor, cutoff | ✅ | [make_ai.txt](docs/verification/make_ai.txt); `data/ai/gold_set.json` |
 | 7g | Crash (20× kill, zero corruption) + offline | ✅ | 0/20 corrupted — [crash_test.txt](docs/verification/crash_test.txt) |
 | 7h | One-command benchmark on 50k deck | ✅ | `make bench` — [make_bench.txt](docs/verification/make_bench.txt) (honest p95 note in [VERIFICATION.md](docs/VERIFICATION.md)) |
-| sec.13 | Bonus: knowledge graph beats keyword + vector | ✅ | +14.3 / +18.5 pts — [RESULTS.md §6](analysis/RESULTS.md) |
+| sec.13 | Bonus: knowledge graph beats keyword + vector | ✅ | +14.3 / +18.5 pts — [RESULTS.md §6](analysis/RESULTS.md). Study-planner head-to-head (200 students) vs **real** TF-IDF + `nomic-embed-text` search: **+1.8 exam pts @10, 95% CI excludes 0** (NDCG 0.82 vs 0.63/0.62). Honest mechanism: text senses topical relatedness (undirected AUC 0.86–0.90) but **not prerequisite *direction*** (dir. acc = 0.5 = chance); the win **degrades to zero when the graph is made inaccurate** (robustness table) — so it's the graph's structure, not a rigged setup, that helps. `make plan` — [RESULTS.md §11](analysis/RESULTS.md), [study_plan.txt](docs/verification/study_plan.txt) |
 
 ### Score model (Speedrun sec. 9)
 

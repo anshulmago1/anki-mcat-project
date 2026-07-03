@@ -1,0 +1,86 @@
+# Study-planning head-to-head (make plan): knowledge-GRAPH planner vs KEYWORD (TF-IDF) & VECTOR (dense embeddings), scored on an independent cognitive-diagnosis exam simulator
+# captured: 2026-07-03 16:21:12 CDT
+# command: make -C analysis plan
+
+.venv/bin/python study_plan_eval.py
+==============================================================================
+STUDY-PLAN EVAL - graph vs keyword vs vector (independent exam simulator)
+==============================================================================
+students=200  vector_backend=ollama:nomic-embed-text
+true structure = curated AAMC prereq graph; graph planner uses a NOISED copy
+graph-vs-true edges: recall=0.952 precision=0.833 (dropped 1 true, added 4 spurious)
+topic text: 24/29 topics have dense passage text
+
+FAIRNESS - can text similarity recover the true prerequisite structure? (21 prereq pairs / 406 pairs)
+  tfidf : undirected-pair AUC=0.862  Pearson r=+0.359  (mean sim prereq=0.132 vs non=0.028)
+  embed : undirected-pair AUC=0.896  Pearson r=+0.373  (mean sim prereq=0.730 vs non=0.605)
+  direction accuracy from symmetric similarity = 0.5 (chance)
+  -> text DOES sense topical relatedness (high undirected AUC), but similarity is
+     SYMMETRIC + mastery-blind: it cannot encode prerequisite DIRECTION or which
+     prereq is currently unmet - which is exactly what the planning task needs.
+
+EXAM-SCORE GAIN after studying top-K (headline; MCAT points, higher=better):
+  planner      K=3                K=5                K=10            
+ *graph        3.953 +/- 0.150    5.736 +/- 0.159    8.896 +/- 0.175
+  keyword      3.707 +/- 0.146    4.472 +/- 0.148    7.069 +/- 0.174
+  vector       3.619 +/- 0.133    4.375 +/- 0.153    7.089 +/- 0.184
+  oracle       4.566 +/- 0.132    6.463 +/- 0.142    9.798 +/- 0.164
+  random       1.521 +/- 0.134    2.625 +/- 0.172    5.589 +/- 0.232
+
+NDCG@K vs true-impact ranking:
+  planner      K=3                K=5                K=10            
+ *graph        0.772 +/- 0.019    0.795 +/- 0.014    0.816 +/- 0.010
+  keyword      0.645 +/- 0.023    0.603 +/- 0.020    0.634 +/- 0.016
+  vector       0.623 +/- 0.022    0.585 +/- 0.020    0.621 +/- 0.015
+  oracle       0.966 +/- 0.007    0.966 +/- 0.005    0.968 +/- 0.003
+  random       0.318 +/- 0.025    0.362 +/- 0.022    0.458 +/- 0.019
+
+PRECISION@K vs oracle top-K:
+  planner      K=3                K=5                K=10            
+ *graph        0.587 +/- 0.033    0.679 +/- 0.025    0.752 +/- 0.013
+  keyword      0.557 +/- 0.031    0.473 +/- 0.022    0.554 +/- 0.015
+  vector       0.540 +/- 0.028    0.466 +/- 0.020    0.549 +/- 0.015
+  oracle       1.000 +/- 0.000    1.000 +/- 0.000    1.000 +/- 0.000
+  random       0.127 +/- 0.026    0.247 +/- 0.024    0.495 +/- 0.019
+
+PREREQ-GAP CLOSURE@K (fraction of blocking prereq gaps addressed):
+  planner      K=3                K=5                K=10            
+ *graph        0.673 +/- 0.026    0.678 +/- 0.020    0.671 +/- 0.012
+  keyword      0.578 +/- 0.023    0.497 +/- 0.021    0.553 +/- 0.017
+  vector       0.583 +/- 0.023    0.513 +/- 0.021    0.548 +/- 0.014
+  oracle       0.765 +/- 0.030    0.763 +/- 0.022    0.813 +/- 0.013
+  random       0.518 +/- 0.038    0.511 +/- 0.027    0.541 +/- 0.018
+
+STUDY EFFICIENCY (exam gain per topic studied = gain@K / K):
+  graph      K=3: 1.318  K=5: 1.147  K=10: 0.890
+  keyword    K=3: 1.236  K=5: 0.894  K=10: 0.707
+  vector     K=3: 1.206  K=5: 0.875  K=10: 0.709
+  oracle     K=3: 1.522  K=5: 1.293  K=10: 0.980
+  random     K=3: 0.507  K=5: 0.525  K=10: 0.559
+
+GRAPH minus TEXT baselines on exam gain (95% CI):
+  K=3: vs keyword +0.247 [0.166, 0.327] (sig=True) | vs vector +0.334 [0.242, 0.427] (sig=True)
+  K=5: vs keyword +1.264 [1.142, 1.386] (sig=True) | vs vector +1.361 [1.235, 1.488] (sig=True)
+  K=10: vs keyword +1.827 [1.677, 1.976] (sig=True) | vs vector +1.807 [1.661, 1.953] (sig=True)
+
+BEATS BOTH BASELINES AT ALL K: True
+
+CASE STUDY (one student; textually-similar != high-impact):
+  weak-area query topics: ['reasoning_beyond_text', 'metabolism', 'enzymes']
+  GRAPH picks 'reasoning_within_text' (an unmastered prereq of ['reasoning_beyond_text']); true gain 0.954
+  KEYWORD picks 'reasoning_beyond_text' (true gain 0.563); VECTOR picks 'reasoning_beyond_text' (true gain 0.563)
+  exam gain@3: graph 3.174 vs keyword 1.819 vs vector 0.991
+==============================================================================
+=== plan complete: see analysis/RESULTS.md sec.11 and data/eval/study_plan_eval.json ===
+
+==============================================================================
+# ROBUSTNESS: does the win survive a NOISIER graph? (non-circularity check)
+# The graph planner uses a noised copy G of the true structure. We degrade G and
+# re-measure. Reproduce each row with the PLAN_EDGE_DROP/PLAN_EDGE_ADD/PLAN_GRAPH_SEED
+# env vars, e.g.: PLAN_EDGE_DROP=0.35 PLAN_EDGE_ADD=0.35 make -C analysis plan
+==============================================================================
+edge_drop edge_add seed | G_recall G_prec |       gain@3 vs kw/vec |      gain@10 vs kw/vec | beats_all
+      0.2      0.2  101 |    0.952  0.833 |   +0.25/+0.33 sig=True |   +1.83/+1.81 sig=True | True
+     0.35     0.35  101 |     0.81  0.708 |   +0.23/+0.32 sig=True |   +1.88/+1.86 sig=True | True
+      0.4      0.5    7 |    0.667  0.583 |  -0.15/-0.06 sig=False |   +1.05/+1.03 sig=True | False
+      0.5      0.6    3 |    0.429  0.409 |  -1.13/-1.04 sig=False |  +0.13/+0.11 sig=False | False

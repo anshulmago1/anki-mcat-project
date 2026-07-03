@@ -4,7 +4,7 @@ PY ?= .venv/bin/python
 # The demo/dashboard talk to the live engine, so they use Anki's built Python.
 ANKI_PY ?= ../anki/out/pyenv/bin/python
 
-.PHONY: eval clean venv simulate demo dashboard outline ai ai-targeted bench crash bridge bridge-llm
+.PHONY: eval clean venv simulate demo dashboard outline ai ai-targeted bench crash bridge bridge-llm plan
 
 eval: simulate
 	$(PY) leakage_check.py
@@ -50,6 +50,15 @@ ai:
 ai-targeted:
 	$(ANKI_PY) ai/targeted_gen.py
 	@echo "=== targeted complete: data/ai/MCAT_Targeted.apkg + data/ai/targeted_report.json ==="
+
+# Study-planning head-to-head: knowledge-GRAPH planner vs plain KEYWORD (TF-IDF)
+# and VECTOR (dense nomic-embed-text embeddings via Ollama; labeled LSA fallback if
+# unavailable) baselines, scored against an INDEPENDENT cognitive-diagnosis exam
+# simulator. Reports exam-gain@K, NDCG/precision, prereq-gap closure, and the
+# text-similarity-vs-prerequisite fairness correlation. numpy-only + optional Ollama.
+plan:
+	$(PY) study_plan_eval.py
+	@echo "=== plan complete: see analysis/RESULTS.md sec.11 and data/eval/study_plan_eval.json ==="
 
 # One-command benchmark on the shared 50,000-card deck (Speedrun 7h + sec.10).
 bench:

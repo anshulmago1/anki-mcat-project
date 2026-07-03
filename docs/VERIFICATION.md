@@ -18,7 +18,9 @@ Captured 2026-07-03 on a mid-range Apple-Silicon Mac.
 | Evaluation harness (`make eval`) | green (calibration ECE 0.008; IRT AUC 0.74 beats baselines; interleaving ablation +9.2pp; graph +14.3/+18.5; real paraphrase gap 0.13; targeted-gen graph 0.62 vs 0.23/0.33/0.32) | [make_eval.txt](verification/make_eval.txt) | `make -C analysis eval` |
 | Local-AI generation (7f) | **correct-rate 0.75 vs 0.0** keyword/vector; **injection defense 6/6**; 30 cards exported | [make_ai.txt](verification/make_ai.txt) | `make -C analysis ai` |
 | Graph-guided targeted generation | 3/3 grounded cards passed the checker; targeting beats random/weight/due | [make_ai_targeted.txt](verification/make_ai_targeted.txt) | `make -C analysis ai-targeted` |
+| Study planner: graph vs keyword vs vector search | **graph beats both at all K** (exam gain@10 +1.83 vs keyword / +1.81 vs vector, 95% CIs exclude 0; real `nomic-embed-text` embeddings); text↔prereq AUC 0.86–0.90 but direction acc = 0.5 (symmetric) | [study_plan.txt](verification/study_plan.txt) | `make -C analysis plan` |
 | Two-device sync (7b) | **20/20 reviews merged, no double-count, conflict = last-write-wins** | [sync_test.txt](verification/sync_test.txt) | `python analysis/sync_test.py` |
+| Live phone↔desktop sync (real apps) | **bidirectional, verified**: desktop→server→phone (phone collection == desktop: scm/mod/cards identical), and a "Good" review on the phone → server → desktop (revlog 16→17, exact review present) | [live_sync.txt](verification/live_sync.txt) · [live_sync_phone.png](verification/live_sync_phone.png) | see log (self-hosted `syncserver` + AnkiDroid fork on emulator) |
 | Crash + offline (7g) | **0/20 corrupted**; AI fails-closed offline; score still computes | [crash_test.txt](verification/crash_test.txt) | `make -C analysis crash` |
 | Benchmark, 50k-card deck (7h + sec.10) | see note below | [make_bench.txt](verification/make_bench.txt) | `make -C analysis bench` |
 

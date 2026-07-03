@@ -1,0 +1,30 @@
+# Evaluation harness (make eval): calibration, IRT, leakage, score map, real paraphrase, ablation, graph-eval, targeted-eval
+# captured: 2026-07-03 15:18:19 CDT
+# command: make -C analysis eval
+
+.venv/bin/python simulate.py
+reviews:   5548 rows -> /Users/anshul/Desktop/AlphaAI/anki-mcat-project/data/sim/reviews.csv
+questions: 455 items -> /Users/anshul/Desktop/AlphaAI/anki-mcat-project/data/sim/questions.json
+responses: 18200 rows -> /Users/anshul/Desktop/AlphaAI/anki-mcat-project/data/sim/responses.csv
+paraphrase:30 cards -> /Users/anshul/Desktop/AlphaAI/anki-mcat-project/data/sim/paraphrase.json
+.venv/bin/python leakage_check.py
+[leakage] 7 of 229 test items flagged (>0.8 cosine); self_test_passed=True
+.venv/bin/python irt_fit.py
+[irt_fit] fitted theta for 40 students x sections from 10920 training responses -> data/fitted_params.json
+.venv/bin/python calibration.py
+[calibration] ECE=0.0083 Brier=0.0782 (REL=0.0005 RES=0.0015 UNC=0.0795) logloss=0.2857 beats_baseline=True
+.venv/bin/python perf_eval.py
+[perf_eval] IRT acc=0.6979 auc=0.7393 brier=0.1942 | beats_baselines=True
+.venv/bin/python score_map.py
+[score_map] total readiness ABSTAINED (CARS) range=[521.0, 528.0] | paraphrase gap=0.267
+.venv/bin/python paraphrase_real.py
+[paraphrase_real] n=30 recall=0.472 transfer=0.343 gap=0.129 | mean cosine=0.079 (max 0.375) | corr(bump,gap)=0.609
+.venv/bin/python ablation.py
+[ablation] V1=64.28 V2=55.11 V3=50.56 | V1-V2=9.17pp CI[6.08, 12.25] supported=True
+.venv/bin/python graph_eval.py
+[graph_eval] exam: graph=506.99 keyword=492.65 vector=488.5 | graph-keyword=14.34 [14.24, 14.45] graph-vector=18.5 [18.43, 18.57] | wasted g=0.0 k=34.68 v=38.39 | beats_baselines=True
+.venv/bin/python ai/targeted_eval.py
+[targeted_eval] value: graph=0.62 random=0.232 weight=0.33 due=0.322 | blocked graph=0.0 weight=2.322 due=2.388 | beats_baselines=True
+.venv/bin/python report.py
+[report] wrote /Users/anshul/Desktop/AlphaAI/anki-mcat-project/analysis/RESULTS.md
+=== eval complete: see analysis/RESULTS.md and data/eval/*.json ===

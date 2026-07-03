@@ -1,0 +1,11 @@
+# Local-AI card generation + gold-set checker + baselines + injection defense (Speedrun 7f)
+# captured: 2026-07-03 15:20:24 CDT
+# command: make -C analysis ai
+
+.venv/bin/python ai/ai_eval.py
+[ai.eval] correct-rate: llm=0.75 keyword=0.0 vector=0.0 | beats_baselines=True | injection defense=1.0 (6/6) | passing cards exported=30
+../anki/out/pyenv/bin/python ai/ai_export.py
+[ai.export] 30 passing cards -> /Users/anshul/Desktop/AlphaAI/anki-mcat-project/data/ai/MCAT_AI_Generated.apkg
+.venv/bin/python report.py
+[report] wrote /Users/anshul/Desktop/AlphaAI/anki-mcat-project/analysis/RESULTS.md
+=== ai complete: see data/eval/ai_eval.json and data/ai/MCAT_AI_Generated.apkg ===

@@ -1,0 +1,14 @@
+# Benchmark on 50,000-card deck (Speedrun 7h + sec.10 latency targets)
+# captured: 2026-07-03 15:20:41 CDT (unloaded machine)
+# command: make -C analysis bench
+../anki/out/pyenv/bin/python make_bench.py 50000
+[bench] reusing cached deck /Users/anshul/Desktop/AlphaAI/anki-mcat-project/data/bench/bench_50000.anki2
+[bench] review queue counts before timing: (1871, 49, 3)
+[bench] 50000 cards
+action                                          p50      p95    worst   target  pass
+dashboard_first_load_compute_readiness        468.4    487.7    602.3     1000  True
+dashboard_refresh_topic_mastery               469.6    533.9    614.5      500  False
+knowledge_graph_topic_graph                   474.1    554.6    879.5      500  False
+points_at_stake_order                         398.4    426.7    434.1      500  True
+next_card_after_grading                         2.0      2.6      4.3      100  True
+[bench] all within section-10 targets: False

@@ -1,0 +1,8 @@
+# Crash + offline durability (Speedrun 7g): 20x mid-review SIGKILL, zero corruption, AI-off score
+# captured: 2026-07-03 15:18:43 CDT
+# command: anki/out/pyenv/bin/python analysis/crash_test.py
+
+[crash] running 20 mid-review SIGKILL trials...
+[crash] corrupted 0/20 (zero_corruption=True)
+[crash] offline: AI fails-closed=True score with AI off=True
+[crash] overall pass: True

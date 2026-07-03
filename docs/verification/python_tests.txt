@@ -1,0 +1,19 @@
+# Python integration tests (engine RPCs called from Python)
+# captured: 2026-07-03 15:18:18 CDT
+# command: anki/out/pyenv/bin/python -m pytest pylib/tests/test_topic_graph.py test_readiness.py test_topic_mastery.py -v
+
+============================= test session starts ==============================
+platform darwin -- Python 3.13.5, pytest-8.4.1, pluggy-1.6.0 -- /Users/anshul/Desktop/AlphaAI/anki-mcat-project/anki/out/pyenv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/anshul/Desktop/AlphaAI/anki-mcat-project/anki/pylib
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collecting ... collected 5 items
+
+pylib/tests/test_topic_graph.py::test_topic_graph_learning_ready_and_path PASSED [ 20%]
+pylib/tests/test_topic_graph.py::test_topic_graph_uncovered_carries_full_weight PASSED [ 40%]
+pylib/tests/test_readiness.py::test_compute_readiness_returns_three_scores_and_abstains PASSED [ 60%]
+pylib/tests/test_topic_mastery.py::test_topic_mastery_groups_by_tag PASSED [ 80%]
+pylib/tests/test_topic_mastery.py::test_topic_mastery_is_read_only_and_undo_safe PASSED [100%]
+
+============================== 5 passed in 0.40s ===============================

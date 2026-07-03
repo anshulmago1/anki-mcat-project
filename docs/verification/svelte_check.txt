@@ -1,0 +1,9 @@
+# TypeScript/Svelte typecheck of the webviews
+# captured: 2026-07-03 15:19:01 CDT
+# command: cd anki/ts && svelte-check
+
+Loading svelte-check in workspace: /Users/anshul/Desktop/AlphaAI/anki-mcat-project/anki/ts
+Getting Svelte diagnostics...
+
+====================================
+svelte-check found 0 errors and 0 warnings

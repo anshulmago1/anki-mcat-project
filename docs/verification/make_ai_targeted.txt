@@ -1,0 +1,7 @@
+# Graph-guided targeted card generation (AI x knowledge graph)
+# captured: 2026-07-03 15:20:25 CDT
+# command: make -C analysis ai-targeted
+
+../anki/out/pyenv/bin/python ai/targeted_gen.py
+[targeted] targets=['organic_chemistry'] generated=3 passed=3 tally={'correct': 3, 'poor': 0, 'wrong': 0} -> /Users/anshul/Desktop/AlphaAI/anki-mcat-project/data/ai/MCAT_Targeted.apkg
+=== targeted complete: data/ai/MCAT_Targeted.apkg + data/ai/targeted_report.json ===

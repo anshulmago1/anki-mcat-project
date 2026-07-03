@@ -114,6 +114,12 @@ Both apps share one collection via Anki's own sync protocol (self-hosted server 
 
 ---
 
+## Verify it
+
+[docs/VERIFICATION.md](docs/VERIFICATION.md) indexes captured test output (Rust/Python/Svelte tests, `make eval/ai/ai-targeted/bench/crash`, the 7b sync test) and [deployment evidence](docs/verification/deployment.md) (the `.dmg` with a pinned SHA-256, the signed APK, and the shared-engine `.aar`), each with a one-line reproduce command.
+
+---
+
 ## Honesty
 
 We do not have real student study-history + full-length-score longitudinal data, so we grade the **steps of the bridge** (calibrated memory, held-out performance, documented score mapping) and label the readiness coefficients **not yet field-calibrated**. Results and limitations: [analysis/RESULTS.md](analysis/RESULTS.md).

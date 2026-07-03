@@ -1,0 +1,28 @@
+# Rust engine unit tests (MCAT stats modules)
+# captured: 2026-07-03 15:21:44 CDT
+# command: cargo test -p anki --lib stats::
+
+[1m[92m   Compiling[0m anki_proto v0.0.0 (/Users/anshul/Desktop/AlphaAI/anki-mcat-project/anki/rslib/proto)
+[1m[92m   Compiling[0m anki v0.0.0 (/Users/anshul/Desktop/AlphaAI/anki-mcat-project/anki/rslib)
+[1m[92m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 14.60s
+[1m[92m     Running[0m unittests src/lib.rs (target/debug/deps/anki-0fdcc840b6e70d40)
+
+running 15 tests
+test stats::graphs::eases::tests::bins ... ok
+test stats::topic_mastery::test::bare_prefix_tag_is_not_a_topic ... ok
+test stats::today::test::today ... ok
+test stats::topic_graph::test::uncovered_node_carries_full_weight ... ok
+test stats::card::test::stats ... ok
+test stats::topic_mastery::test::mastered_threshold_counts_high_retrievability ... ok
+test stats::topic_graph::test::learning_ready_gate_follows_prereq_mastery ... ok
+test stats::readiness::test::next_actions_rank_uncovered_topic_first ... ok
+test stats::readiness::test::abstains_when_coverage_below_threshold ... ok
+test stats::readiness::test::memory_reflects_engine_retrievability ... ok
+test stats::topic_mastery::test::groups_cards_by_topic_tag ... ok
+test stats::topic_graph::test::unmet_prereq_blocks_learning_ready ... ok
+test stats::topic_graph::test::recommended_path_respects_prereqs_and_stake ... ok
+test stats::topic_mastery::test::points_at_stake_orders_high_weight_first ... ok
+test stats::topic_mastery::test::untagged_and_new_cards_are_excluded_or_zeroed ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 322 filtered out; finished in 0.06s
+

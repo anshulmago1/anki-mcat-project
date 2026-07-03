@@ -1,0 +1,7 @@
+# Two-device sync test (Speedrun 7b): offline reviews merge, no double-count, LWW conflict
+# captured: 2026-07-03 15:18:33 CDT
+# command: anki/out/pyenv/bin/python analysis/sync_test.py
+
+
+
+[sync] merge: A_rev=20 B_rev=20 all_20_both=True no_double_count=True | conflict winner=EDIT_A | overall pass=True

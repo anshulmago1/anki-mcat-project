@@ -132,13 +132,13 @@ We do not have real student study-history + full-length-score longitudinal data,
 
 | Action | p50 (ms) | p95 (ms) | worst (ms) | target p95 | pass |
 |---|---|---|---|---|---|
-| dashboard_first_load_compute_readiness | 467.8 | 475.1 | 477.2 | 1000 | True |
-| dashboard_refresh_topic_mastery | 467.3 | 469.6 | 470.8 | 500 | True |
-| knowledge_graph_topic_graph | 467.8 | 474.3 | 523.1 | 500 | True |
-| points_at_stake_order | 401.7 | 424.6 | 443.2 | 500 | True |
-| next_card_after_grading | 1.8 | 2.3 | 3.8 | 100 | True |
+| dashboard_first_load_compute_readiness | 478.9 | 551.8 | 784.3 | 1000 | True |
+| dashboard_refresh_topic_mastery | 479.6 | 516.3 | 556.4 | 500 | False |
+| knowledge_graph_topic_graph | 468.4 | 534.6 | 570.5 | 500 | False |
+| points_at_stake_order | 406.1 | 479.6 | 495.1 | 500 | True |
+| next_card_after_grading | 2.0 | 2.5 | 4.9 | 100 | True |
 
-- **All within section-10 targets: True** (compute_readiness is a single card pass; ~4x faster than the naive per-section version)
+- **All within section-10 targets: False** (compute_readiness is a single card pass; ~4x faster than the naive per-section version)
 
 ## 9. Two-device sync (Speedrun 7b)
 

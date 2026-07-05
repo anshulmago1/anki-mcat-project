@@ -9,11 +9,19 @@ are easy to verify.
 | Item | Value |
 |---|---|
 | Installer | `anki/out/installer/dist/anki-26.05b1-mac-apple.dmg` |
-| Size | 237,162,690 bytes (~226 MiB) |
-| SHA-256 | `8754d9c5403cd6abdadd6ef044ae910ee50f1bd48847b6e36aebcd600850395b` |
-| Built | 2026-07-03 11:52 via `RELEASE=1 ./ninja installer` |
+| Size | 244,788,527 bytes (~233 MiB) |
+| SHA-256 | `534ed323ecdefb7c622fa694349949b806bf6c2100cbc9f05d4c2ce30aba7c22` |
+| Built | 2026-07-05 via `RELEASE=1 ./ninja installer` (numpy 2.5.1 baked into the bundle's `Python.framework` site-packages, then re-packaged) |
 | Signing | ad-hoc (runs on the build machine; a different clean Mac needs right-click -> Open once for Gatekeeper) |
 | Installed | `/Applications/Anki.app` (drag from the `.dmg`) |
+
+> **AI-generation buttons (honest note):** the two AI buttons ("Generate AI cards
+> from sources" and "Generate AI cards for this topic") require **Ollama running
+> locally** (`ollama serve` + `ollama pull llama3`) and, on this machine, the
+> repo's `analysis/ai` + `data/ai` (located via the `MCAT_AI_HOME` env var, the
+> dev tree, or a built-in fallback path). numpy 2.5.1 is bundled in the `.dmg`,
+> so the pipeline's TF-IDF retriever works out of the box. With AI off, the app
+> otherwise runs fully (readiness scores, knowledge graph, review, sync).
 
 **Proof the installer is the fork, not stock Anki:** the packaged web bundle inside
 the `.dmg` contains the MCAT knowledge-graph code. Verify with:

@@ -34,6 +34,25 @@ See [PRD.md](PRD.md) for the full product spec and [docs/models/](docs/models/) 
 
 ---
 
+## What's changed since the MVP
+
+The MVP proved the hard spine: the fork builds, one shared Rust engine runs on **both** desktop and Android, two-way sync works, the three `EvidencedValue` scores render, and calibration/leakage/installers are in place. Since then **every deferred item shipped**, plus new work — this is the "show the product, not the idea" delta:
+
+| Area | MVP | Final |
+|---|---|---|
+| **Performance model** | IRT-style transfer estimate | genuine **3PL IRT** (grid-MLE θ + Fisher-information SE), computed **live in the engine** — held-out **AUC 0.74** beats keyword/vector |
+| **AI** | none (AI-off core only) | local source-grounded generation + **50-item gold-set checker** + **prompt-injection defense 6/6** + **graph-guided targeted generation** — **all one-click in the UI**; **0.75 vs 0.0** over keyword/vector ([make_ai.txt](docs/verification/make_ai.txt)) |
+| **Knowledge graph** | — | interactive cue-diagnostics graph **+ a study planner that beats keyword & vector search** (+1.8 exam pts, 95% CI excludes 0) — bonus sec.13 ([study_plan.txt](docs/verification/study_plan.txt)) |
+| **Study-feature test** | deferred | pre-registered **interleaving ablation** V1/V2/V3 (+9.2pp) ([RESULTS.md §5](analysis/RESULTS.md)) |
+| **Sync** | offline-merge harness (7b) | **live phone↔desktop verified on the real apps** — bidirectional, byte-identical convergence + a phone review appearing on desktop ([live_sync.txt](docs/verification/live_sync.txt), screenshot) |
+| **Reliability** | — | one-command **50k-card benchmark** (p50/p95/worst) + **20× crash test** (0/20 corrupted) ([make_bench.txt](docs/verification/make_bench.txt), [crash_test.txt](docs/verification/crash_test.txt)) |
+
+**Everything above is verifiable in one place** — see [Verify it](#verify-it) / [docs/VERIFICATION.md](docs/VERIFICATION.md) (every claim links to a captured log + a re-run command) and the demo walkthrough in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+
+**Still honestly deferred** (unchanged from the MVP's cut list): iOS, real-time/E2E sync, 100k cards, notarized multi-OS installers, and readiness coefficients fit on **real longitudinal student data** (labeled "not yet field-calibrated" — the spec prefers this honest gap over a fabricated number).
+
+---
+
 ## The Rust engine change (graded 20%)
 
 See [docs/RUST_CHANGE.md](docs/RUST_CHANGE.md) for the one-page note and the list of upstream files touched with merge-difficulty. In brief: new RPCs on `StatsService` (`TopicMastery`, `ComputeReadiness`, `PointsAtStakeOrder`, `TopicGraph`) implemented in `anki/rslib/src/stats/`, with ≥11 Rust unit tests + Python-calling tests, undo-safe and read-only over the collection.
@@ -55,6 +74,18 @@ graph TD
 ```
 
 Full detail: [ARCHITECTURE.md](ARCHITECTURE.md) and [CODEBASE_MAP.md](CODEBASE_MAP.md).
+
+---
+
+## Install (prebuilt) — platform support
+
+| Platform | How to install | Notes |
+|---|---|---|
+| **macOS desktop** | Open `anki/out/installer/dist/anki-26.05b1-mac-apple.dmg` and drag **Anki.app** → **/Applications**. It's ad-hoc signed, so on first launch use **right-click → Open** once to pass Gatekeeper. | The primary app. SHA-256 pinned in [deployment.md](docs/verification/deployment.md). |
+| **Android** (phone or emulator) | Install the signed APK: `adb install -r AnkiDroid-full-arm64-v8a-debug.apk` (or sideload it onto the device). | The phone companion — runs the **same shared Rust engine** and syncs with the desktop. |
+| **Windows / Linux desktop** | **No prebuilt installer** — build from source (see *Build & run* below). | The shipped desktop installer is **macOS-only**; the Android APK is for Android devices, **not** Windows. |
+
+Two things to expect on a fresh install: (1) the app opens an **empty collection** — import an MCAT deck to populate the dashboard (the demo deck/readiness data is local, not committed); (2) **AI generation needs a local [Ollama](https://ollama.com) server** — the app otherwise runs fully (all three scores, graph, sync) **with AI off**.
 
 ---
 

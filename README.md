@@ -47,7 +47,7 @@ The MVP proved the hard spine: the fork builds, one shared Rust engine runs on *
 | **Sync** | offline-merge harness (7b) | **live phone↔desktop verified on the real apps** — bidirectional, byte-identical convergence + a phone review appearing on desktop ([live_sync.txt](docs/verification/live_sync.txt), screenshot) |
 | **Reliability** | — | one-command **50k-card benchmark** (p50/p95/worst) + **20× crash test** (0/20 corrupted) ([make_bench.txt](docs/verification/make_bench.txt), [crash_test.txt](docs/verification/crash_test.txt)) |
 
-**Everything above is verifiable in one place** — see [Verify it](#verify-it) / [docs/VERIFICATION.md](docs/VERIFICATION.md) (every claim links to a captured log + a re-run command) and the demo walkthrough in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+**Everything above is verifiable in one place** — see [Verify it](#verify-it) / [docs/VERIFICATION.md](docs/VERIFICATION.md) (every claim links to a captured log + a re-run command).
 
 **Still honestly deferred** (unchanged from the MVP's cut list): iOS, real-time/E2E sync, 100k cards, notarized multi-OS installers, and readiness coefficients fit on **real longitudinal student data** (labeled "not yet field-calibrated" — the spec prefers this honest gap over a fabricated number).
 
@@ -195,7 +195,7 @@ Both apps share one collection via Anki's own sync protocol (self-hosted server 
 - **Public AGPL fork, credit to Anki, exam stated up front, build instructions (both apps), architecture, Rust-change note, files touched** — this README + [docs/RUST_CHANGE.md](docs/RUST_CHANGE.md) + [ARCHITECTURE.md](ARCHITECTURE.md).
 - **Model descriptions (one page each)** — [docs/models/memory.md](docs/models/memory.md), [performance.md](docs/models/performance.md), [readiness.md](docs/models/readiness.md).
 - **Brainlift** — [Brainlift Week 2.pdf](Brainlift%20Week%202.pdf).
-- **Demo video (3–5 min)** — shot list in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md); installer-recording runbook in [deployment.md](docs/verification/deployment.md). *(The video itself is the one artifact recorded by hand.)*
+- **Demo video (3–5 min)** — installer-recording runbook in [deployment.md](docs/verification/deployment.md). *(The video itself is the one artifact recorded by hand.)*
 
 ### How it maps to the grade (Speedrun sec. 11)
 
